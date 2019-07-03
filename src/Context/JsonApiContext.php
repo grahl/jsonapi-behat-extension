@@ -403,6 +403,29 @@ class JsonApiContext implements SnippetAcceptingContext, JsonApiAwareInterface
     }
 
     /**
+     * @Then the :field property is an object with :count items
+     *
+     * Checks if the specified field is an object with a specified number of items
+     * -
+     * Example:
+     * And the "genres" property is an object with 4 items
+     */
+    public function thePropertyIsAnObjectWithItems($property, $count)
+    {
+        // Run the regular thePropertyIsAnObject function first
+        $this->thePropertyIsAnObject($property);
+
+        $payload = $this->getScopePayload();
+        $actualValue = $this->arrayGet($payload, $property);
+
+        PHPUnit::assertEquals(
+            count(array_keys((array)$actualValue)),
+            $count,
+            sprintf('Asserting the [%s] array contains [%s] items', $property, $count)
+        );
+    }
+
+    /**
      * @Then the :field property is an array
      *
      * Checks if the specified field is an array
